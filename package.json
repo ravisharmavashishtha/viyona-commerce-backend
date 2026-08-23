@@ -1,0 +1,23 @@
+{
+  "name": "viyona-commerce-backend",
+  "version": "1.0.0",
+  "description": "24/7 Standalone Cloud Microservice for Viyona Designs (WhatsApp Conversational Commerce, PhonePe UPI, and Shiprocket Automated Fulfillment)",
+  "main": "api/health.js",
+  "type": "module",
+  "scripts": {
+    "test": "node tests/simulate_pipeline.js",
+    "dev": "vercel dev"
+  },
+  "keywords": [
+    "viyona-designs",
+    "whatsapp-commerce",
+    "phonepe-upi",
+    "shiprocket",
+    "vercel-serverless"
+  ],
+  "author": "Viyona Designs",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  }
+}
