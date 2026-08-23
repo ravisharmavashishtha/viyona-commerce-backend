@@ -481,26 +481,62 @@
 
   <!-- QR / UPI Modal -->
   <div id="paymentModal" class="modal-overlay">
-    <div class="modal-content">
+    <div class="modal-content" id="modalContent">
       <button class="modal-close" onclick="closeModal()">×</button>
-      <h3 style="font-family:'Cinzel',serif; color:#FFFFFF; margin-bottom:4px;">Scan & Pay via UPI</h3>
-      <p style="font-size:13px; color:var(--text-muted);">Instant 0% Fee Payment to <b>Q204350776@ybl</b></p>
       
-      <div class="qr-container">
-        <img id="qrImage" src="" alt="PhonePe QR Code">
+      <!-- State 1: Payment Prompt -->
+      <div id="paymentStatePrompt">
+        <h3 style="font-family:'Cinzel',serif; color:#FFFFFF; margin-bottom:4px;">Scan & Pay via UPI</h3>
+        <p style="font-size:13px; color:var(--text-muted);">Instant 0% Fee Payment to <b>Q204350776@ybl</b></p>
+        
+        <div class="qr-container">
+          <img id="qrImage" src="" alt="PhonePe QR Code">
+        </div>
+
+        <div style="margin-bottom:14px;">
+          <span style="font-size:22px; font-weight:800; color:var(--gold-light);" id="modalAmount">₹1.00</span>
+        </div>
+
+        <a id="upiAppBtn" href="#" class="btn-pay" style="text-decoration:none; margin-bottom:12px;">
+          <span>📱</span> Open PhonePe / GPay App
+        </a>
+
+        <!-- UTR / Confirmation Box -->
+        <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:12px; margin-top:12px;">
+          <p style="font-size:12px; color:#D1D5DB; margin-bottom:8px; font-weight:600;">Already paid? Confirm to generate tracking:</p>
+          <input type="text" id="utrInput" class="form-input" placeholder="Optional 12-Digit UPI Ref / UTR" style="margin-bottom:8px; font-size:13px; padding:8px 12px;">
+          <button id="btnConfirmPay" class="btn-pay" onclick="confirmPaymentAndShip()" style="font-size:14px; padding:10px; background:#10B981; color:#FFFFFF; box-shadow:0 4px 15px rgba(16,185,129,0.3);">
+            <span>✅</span> I Have Paid — Generate Tracking
+          </button>
+        </div>
+
+        <p style="font-size:11px; color:#9CA3AF; margin-top:10px;">
+          🔊 Verified by Viyona Studio SmartSpeaker. Parcel booked automatically via Shiprocket!
+        </p>
       </div>
 
-      <div style="margin-bottom:16px;">
-        <span style="font-size:22px; font-weight:800; color:var(--gold-light);" id="modalAmount">₹1.00</span>
+      <!-- State 2: Confirmed & Shipped -->
+      <div id="paymentStateSuccess" style="display:none; text-align:center;">
+        <div style="font-size:40px; margin-bottom:8px;">🎉</div>
+        <h3 style="font-family:'Cinzel',serif; color:var(--gold-light); margin-bottom:4px;">Payment Confirmed!</h3>
+        <p style="font-size:13px; color:#10B981; font-weight:600; margin-bottom:16px;">Shipment Booked with Shiprocket 🚚</p>
+        
+        <div style="background:rgba(255,255,255,0.05); border:1px solid var(--card-border); border-radius:14px; padding:14px; text-align:left; margin-bottom:16px; font-size:13px;">
+          <p style="margin-bottom:6px; color:#9CA3AF;">Order ID: <b id="succOrderId" style="color:#FFFFFF;"></b></p>
+          <p style="margin-bottom:6px; color:#9CA3AF;">Item: <b id="succProduct" style="color:#FFFFFF;"></b></p>
+          <p style="margin-bottom:6px; color:#9CA3AF;">Courier: <b style="color:#6EE7B7;">Ekart Logistics Surface</b></p>
+          <p style="margin-bottom:0; color:#9CA3AF;">AWB Tracking #: <b id="succAwb" style="color:var(--gold-light); font-size:14px;"></b></p>
+        </div>
+
+        <a id="succTrackBtn" href="#" target="_blank" class="btn-pay" style="text-decoration:none; margin-bottom:10px;">
+          <span>📍</span> Track Live on Shiprocket
+        </a>
+
+        <button onclick="closeModal()" style="background:transparent; border:1px solid rgba(255,255,255,0.2); color:#9CA3AF; font-size:13px; padding:8px 16px; border-radius:8px; cursor:pointer; width:100%;">
+          Close Window
+        </button>
       </div>
 
-      <a id="upiAppBtn" href="#" class="btn-pay" style="text-decoration:none; margin-bottom:10px;">
-        <span>📱</span> Open PhonePe / GPay App
-      </a>
-
-      <p style="font-size:11px; color:#9CA3AF; margin-top:8px;">
-        🔊 Verified automatically by Viyona Studio SmartSpeaker. Your Shiprocket courier AWB will be generated upon payment!
-      </p>
     </div>
   </div>
 
@@ -510,6 +546,8 @@
       price: 1,
       name: 'Matte White Lord Ganesha Idol'
     };
+
+    let activeOrder = {};
 
     function selectProduct(id, price, name, element) {
       currentProduct = { id, price, name };
@@ -538,6 +576,8 @@
       const name = document.getElementById('custName').value.trim();
       const phone = document.getElementById('custPhone').value.trim();
       const address = document.getElementById('custAddress').value.trim();
+      const city = document.getElementById('custCity').value.trim() || 'Bengaluru';
+      const state = document.getElementById('custState').value.trim() || 'Karnataka';
       const pincode = document.getElementById('custPincode').value.trim();
 
       if (!name || !phone || !address || pincode.length !== 6) {
@@ -551,16 +591,67 @@
       const upiUri = `upi://pay?pa=${encodeURIComponent(merchantVpa)}&pn=Viyona%20Designs&am=${currentProduct.price}.00&cu=INR&tr=${encodeURIComponent(orderId)}&tn=${encodeURIComponent(note)}`;
       const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(upiUri)}`;
 
+      activeOrder = {
+        orderId,
+        productId: currentProduct.id,
+        customerName: name,
+        customerPhone: phone,
+        address,
+        city,
+        state,
+        pincode,
+        amount: currentProduct.price,
+        upiUri
+      };
+
       document.getElementById('qrImage').src = qrUrl;
       document.getElementById('modalAmount').innerText = `₹${currentProduct.price}.00`;
       document.getElementById('upiAppBtn').href = upiUri;
+      
+      document.getElementById('paymentStatePrompt').style.display = 'block';
+      document.getElementById('paymentStateSuccess').style.display = 'none';
 
-      // On Mobile, directly open UPI app
+      document.getElementById('paymentModal').classList.add('active');
+
+      // On Mobile, directly launch UPI app
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       if (isMobile) {
         window.location.href = upiUri;
-      } else {
-        document.getElementById('paymentModal').classList.add('active');
+      }
+    }
+
+    async function confirmPaymentAndShip() {
+      const btn = document.getElementById('btnConfirmPay');
+      const utr = document.getElementById('utrInput').value.trim();
+      btn.disabled = true;
+      btn.innerText = '⏳ Verifying & Booking Parcel with Shiprocket...';
+
+      try {
+        const res = await fetch('/api/confirm-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...activeOrder,
+            utr
+          })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('paymentStatePrompt').style.display = 'none';
+          document.getElementById('paymentStateSuccess').style.display = 'block';
+          document.getElementById('succOrderId').innerText = data.order_id;
+          document.getElementById('succProduct').innerText = data.product_name;
+          document.getElementById('succAwb').innerText = data.awb_code;
+          document.getElementById('succTrackBtn').href = data.tracking_url;
+        } else {
+          alert('Could not book shipment: ' + (data.error || 'Please try again'));
+        }
+      } catch (err) {
+        alert('Network error: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span>✅</span> I Have Paid — Generate Tracking';
       }
     }
 
