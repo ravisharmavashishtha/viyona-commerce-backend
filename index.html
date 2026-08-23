@@ -3,61 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Viyona Designs — Direct Studio Checkout (0% Extra Fees)</title>
+  <title>Viyona Designs — Studio Offline</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-dark: #0A0D14;
       --card-bg: rgba(22, 27, 38, 0.85);
       --card-border: rgba(212, 175, 55, 0.25);
-      --gold-primary: #D4AF37;
       --gold-light: #F3E5AB;
-      --gold-glow: rgba(212, 175, 55, 0.35);
-      --text-main: #F9FAFB;
       --text-muted: #9CA3AF;
-      --accent-green: #10B981;
-      --accent-purple: #8B5CF6;
     }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
       background-color: var(--bg-dark);
-      background-image: 
-        radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.12) 0%, transparent 60%),
-        radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
-      color: var(--text-main);
+      background-image: radial-gradient(circle at 50% 30%, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+      color: #F9FAFB;
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      padding: 20px 16px 60px 16px;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 520px;
-    }
-
-    /* Header */
-    .header {
+      justify-content: center;
+      padding: 24px 16px;
       text-align: center;
-      margin-bottom: 24px;
-      position: relative;
     }
-
-    .brand-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 40px 24px;
+      max-width: 440px;
+      width: 100%;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(12px);
+    }
+    .badge {
+      display: inline-block;
       padding: 4px 12px;
       border-radius: 20px;
       background: rgba(212, 175, 55, 0.1);
@@ -67,642 +49,46 @@
       font-weight: 600;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      margin-bottom: 10px;
+      margin-bottom: 16px;
     }
-
-    .brand-title {
+    h1 {
       font-family: 'Cinzel', serif;
-      font-size: 26px;
+      font-size: 24px;
       font-weight: 700;
-      letter-spacing: 1px;
-      background: linear-gradient(135deg, #FFFFFF 0%, #D4AF37 50%, #F3E5AB 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 6px;
-    }
-
-    .brand-subtitle {
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-
-    /* Product Selection Card */
-    .section-title {
-      font-size: 13px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--gold-light);
+      color: #FFFFFF;
       margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
     }
-
-    .product-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+    p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
       margin-bottom: 24px;
     }
-
-    .product-card {
-      background: var(--card-bg);
-      border: 1.5px solid rgba(255, 255, 255, 0.08);
-      border-radius: 14px;
-      padding: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      backdrop-filter: blur(12px);
-      position: relative;
-    }
-
-    .product-card.selected {
-      border-color: var(--gold-primary);
-      background: rgba(212, 175, 55, 0.08);
-      box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
-    }
-
-    .product-info {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .product-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      flex-shrink: 0;
-    }
-
-    .product-details h4 {
-      font-size: 15px;
-      font-weight: 600;
-      color: #FFFFFF;
-      margin-bottom: 2px;
-    }
-
-    .product-details p {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    .product-pricing {
-      text-align: right;
-    }
-
-    .product-price {
-      font-size: 17px;
-      font-weight: 700;
-      color: var(--gold-light);
-    }
-
-    .product-mrp {
-      font-size: 12px;
-      color: #6B7280;
-      text-decoration: line-through;
-    }
-
-    .badge-popular {
-      position: absolute;
-      top: -8px;
-      right: 12px;
-      background: linear-gradient(135deg, #D4AF37, #B38F26);
-      color: #000000;
-      font-size: 9px;
-      font-weight: 800;
-      padding: 2px 8px;
-      border-radius: 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    /* Form Container */
-    .form-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 20px;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-      margin-bottom: 20px;
-    }
-
-    .form-group {
-      margin-bottom: 14px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 12px;
-      font-weight: 600;
-      color: #D1D5DB;
-      margin-bottom: 6px;
-      letter-spacing: 0.3px;
-    }
-
-    .form-input {
-      width: 100%;
-      background: rgba(10, 13, 20, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 10px;
-      padding: 12px 14px;
-      font-size: 14px;
-      color: #FFFFFF;
-      font-family: inherit;
-      outline: none;
-      transition: all 0.2s ease;
-    }
-
-    .form-input:focus {
-      border-color: var(--gold-primary);
-      box-shadow: 0 0 10px var(--gold-glow);
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    /* ETA Banner */
-    .eta-banner {
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      border-radius: 10px;
-      padding: 10px 14px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 13px;
-      color: #6EE7B7;
-      margin-top: 10px;
-      display: none;
-    }
-
-    /* Benefits Pills */
-    .benefits-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-bottom: 20px;
-    }
-
-    .benefit-item {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 10px;
-      padding: 10px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      color: #E5E7EB;
-    }
-
-    /* Payment Button */
-    .btn-pay {
-      width: 100%;
-      background: linear-gradient(135deg, #D4AF37 0%, #B89025 100%);
-      color: #000000;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 16px;
-      font-weight: 700;
-      padding: 16px;
-      border-radius: 12px;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
-      transition: all 0.2s ease;
-    }
-
-    .btn-pay:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 25px rgba(212, 175, 55, 0.45);
-    }
-
-    .btn-pay:active {
-      transform: scale(0.98);
-    }
-
-    /* Modal / QR Overlay */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(10px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      z-index: 999;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-    }
-
-    .modal-overlay.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .modal-content {
-      background: #131722;
-      border: 1px solid var(--gold-primary);
-      border-radius: 20px;
-      padding: 24px;
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
-      position: relative;
-    }
-
-    .qr-container {
-      background: #FFFFFF;
-      padding: 14px;
-      border-radius: 14px;
+    .contact-link {
       display: inline-block;
-      margin: 16px 0;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #E5E7EB;
+      text-decoration: none;
+      font-size: 13px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      transition: all 0.2s;
     }
-
-    .qr-container img {
-      width: 200px;
-      height: 200px;
-      display: block;
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      background: transparent;
-      border: none;
-      color: #9CA3AF;
-      font-size: 22px;
-      cursor: pointer;
+    .contact-link:hover {
+      border-color: var(--gold-light);
+      color: var(--gold-light);
     }
   </style>
 </head>
 <body>
-
-  <div class="container">
-    <!-- Header -->
-    <div class="header">
-      <div class="brand-badge">✨ Viyona Designs • Direct Studio ✨</div>
-      <h1 class="brand-title">Sacred Craft & Precision</h1>
-      <p class="brand-subtitle">Direct Studio Checkout • 0% Extra Commission • 100% Secure UPI</p>
-    </div>
-
-    <!-- Product Picker -->
-    <div class="section-title">1. Select Studio Creation</div>
-    <div class="product-grid">
-      
-      <!-- Ganesha -->
-      <div class="product-card selected" onclick="selectProduct('ganesha', 1, 'Matte White Lord Ganesha Idol', this)">
-        <span class="badge-popular">Test Mode: ₹1</span>
-        <div class="product-info">
-          <div class="product-icon">🕉️</div>
-          <div class="product-details">
-            <h4>Matte White Lord Ganesha</h4>
-            <p>0.08mm Silk Bio-PLA • 7x4x3.5"</p>
-          </div>
-        </div>
-        <div class="product-pricing">
-          <div class="product-price">₹1</div>
-          <div class="product-mrp">₹1,199</div>
-        </div>
-      </div>
-
-      <!-- Puppy Tray -->
-      <div class="product-card" onclick="selectProduct('puppy', 499, 'Cute Sleeping Puppy Desk Tray', this)">
-        <div class="product-info">
-          <div class="product-icon">🐶</div>
-          <div class="product-details">
-            <h4>Cute Sleeping Puppy Tray</h4>
-            <p>Artisan Key Catchall • 6x4x3"</p>
-          </div>
-        </div>
-        <div class="product-pricing">
-          <div class="product-price">₹499</div>
-          <div class="product-mrp">₹899</div>
-        </div>
-      </div>
-
-      <!-- Phone Stand -->
-      <div class="product-card" onclick="selectProduct('phonestand', 299, 'Multi-Angle Phone Stand', this)">
-        <div class="product-info">
-          <div class="product-icon">📱</div>
-          <div class="product-details">
-            <h4>Multi-Angle Phone Stand</h4>
-            <p>Ergonomic Desk Cradle • Slate</p>
-          </div>
-        </div>
-        <div class="product-pricing">
-          <div class="product-price">₹299</div>
-          <div class="product-mrp">₹599</div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Address Form -->
-    <div class="section-title">2. Delivery Address</div>
-    <div class="form-card">
-      
-      <div class="form-group">
-        <label>Full Name</label>
-        <input type="text" id="custName" class="form-input" placeholder="e.g. Aarav Sharma" required>
-      </div>
-
-      <div class="form-group">
-        <label>Mobile Number (For Courier SMS & WhatsApp Updates)</label>
-        <input type="tel" id="custPhone" class="form-input" placeholder="e.g. 9876543210" maxlength="10" required>
-      </div>
-
-      <div class="form-group">
-        <label>Complete Street Address & Landmark</label>
-        <input type="text" id="custAddress" class="form-input" placeholder="Flat 402, Palm Heights, Near City Mall, MG Road..." required>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label>City</label>
-          <input type="text" id="custCity" class="form-input" placeholder="e.g. Bengaluru" required>
-        </div>
-        <div class="form-group">
-          <label>State</label>
-          <input type="text" id="custState" class="form-input" placeholder="e.g. Karnataka" required>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>6-Digit Pincode</label>
-        <input type="text" id="custPincode" class="form-input" placeholder="e.g. 560001" maxlength="6" oninput="checkEta(this.value)" required>
-      </div>
-
-      <!-- Live ETA Badge -->
-      <div id="etaBadge" class="eta-banner">
-        <span>🚚</span>
-        <span id="etaText">Checking live Shiprocket delivery speed...</span>
-      </div>
-
-    </div>
-
-    <!-- Features -->
-    <div class="benefits-grid">
-      <div class="benefit-item">🌱 100% Plant-Based Bio-PLA</div>
-      <div class="benefit-item">📜 4x4" Gold Blessing Card</div>
-      <div class="benefit-item">📦 Packgenie Luxury Mailer</div>
-      <div class="benefit-item">🚀 Free Pan-India Delivery</div>
-    </div>
-
-    <!-- Pay Button -->
-    <button class="btn-pay" onclick="handlePayClick()">
-      <span>🔒</span>
-      <span id="payBtnText">Pay ₹1 via PhonePe / UPI</span>
-    </button>
+  <div class="card">
+    <div class="badge">✨ Viyona Designs ✨</div>
+    <h1>Direct Studio Portal</h1>
+    <p>Our direct checkout pipeline is currently undergoing scheduled maintenance and upgrades. Direct orders are temporarily offline.</p>
+    <a href="https://instagram.com/viyonadesigns" target="_blank" class="contact-link">
+      Connect on Instagram @viyonadesigns ↗
+    </a>
   </div>
-
-  <!-- QR / UPI Modal -->
-  <div id="paymentModal" class="modal-overlay">
-    <div class="modal-content" id="modalContent">
-      <button class="modal-close" onclick="closeModal()">×</button>
-      
-      <!-- State 1: Payment Prompt -->
-      <div id="paymentStatePrompt">
-        <h3 style="font-family:'Cinzel',serif; color:#FFFFFF; margin-bottom:4px;">Scan & Pay via UPI</h3>
-        <p style="font-size:13px; color:var(--text-muted);">Instant 0% Fee Payment to <b>Q204350776@ybl</b></p>
-        
-        <div class="qr-container">
-          <img id="qrImage" src="" alt="PhonePe QR Code">
-        </div>
-
-        <div style="margin-bottom:14px;">
-          <span style="font-size:22px; font-weight:800; color:var(--gold-light);" id="modalAmount">₹1.00</span>
-        </div>
-
-        <!-- Live Auto-Detection Badge -->
-        <div style="background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25); border-radius:12px; padding:12px; margin-top:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;">
-          <div style="display:flex; align-items:center; gap:8px;">
-            <div style="width:8px; height:8px; border-radius:50%; background:#10B981; animation: pulse 1.5s infinite;"></div>
-            <span style="font-size:12px; color:#6EE7B7; font-weight:600;" id="pollStatusText">Waiting for PhonePe payment...</span>
-          </div>
-          <button onclick="instantConfirm()" class="btn-pay" style="width:100%; padding:10px; font-size:13px; background:#10B981; color:#FFFFFF; margin-top:4px; box-shadow:0 4px 15px rgba(16,185,129,0.3);">
-            <span>✅</span> Payment Done? Book Courier Now
-          </button>
-        </div>
-
-        <p style="font-size:11px; color:#9CA3AF; margin-top:10px;">
-          🔊 SmartSpeaker sync active. Parcel booked automatically upon payment!
-        </p>
-      </div>
-
-      <!-- State 2: Confirmed & Shipped -->
-      <div id="paymentStateSuccess" style="display:none; text-align:center;">
-        <div style="font-size:40px; margin-bottom:8px;">🎉</div>
-        <h3 style="font-family:'Cinzel',serif; color:var(--gold-light); margin-bottom:4px;">Payment Confirmed!</h3>
-        <p style="font-size:13px; color:#10B981; font-weight:600; margin-bottom:16px;">Shipment Booked with Shiprocket 🚚</p>
-        
-        <div style="background:rgba(255,255,255,0.05); border:1px solid var(--card-border); border-radius:14px; padding:14px; text-align:left; margin-bottom:16px; font-size:13px;">
-          <p style="margin-bottom:6px; color:#9CA3AF;">Order ID: <b id="succOrderId" style="color:#FFFFFF;"></b></p>
-          <p style="margin-bottom:6px; color:#9CA3AF;">Item: <b id="succProduct" style="color:#FFFFFF;"></b></p>
-          <p style="margin-bottom:6px; color:#9CA3AF;">Courier: <b style="color:#6EE7B7;">Ekart Logistics Surface</b></p>
-          <p style="margin-bottom:0; color:#9CA3AF;">AWB Tracking #: <b id="succAwb" style="color:var(--gold-light); font-size:14px;"></b></p>
-        </div>
-
-        <a id="succTrackBtn" href="#" target="_blank" class="btn-pay" style="text-decoration:none; margin-bottom:10px;">
-          <span>📍</span> Track Live on Shiprocket
-        </a>
-
-        <button onclick="closeModal()" style="background:transparent; border:1px solid rgba(255,255,255,0.2); color:#9CA3AF; font-size:13px; padding:8px 16px; border-radius:8px; cursor:pointer; width:100%;">
-          Close Window
-        </button>
-      </div>
-
-    </div>
-  </div>
-
-  <style>
-    @keyframes pulse {
-      0% { transform: scale(0.95); opacity: 0.7; }
-      50% { transform: scale(1.3); opacity: 1; }
-      100% { transform: scale(0.95); opacity: 0.7; }
-    }
-  </style>
-
-  <script>
-    let currentProduct = {
-      id: 'ganesha',
-      price: 1,
-      name: 'Matte White Lord Ganesha Idol'
-    };
-
-    let activeOrder = {};
-    let pollTimer = null;
-
-    function selectProduct(id, price, name, element) {
-      currentProduct = { id, price, name };
-      document.querySelectorAll('.product-card').forEach(c => c.classList.remove('selected'));
-      element.classList.add('selected');
-      document.getElementById('payBtnText').innerText = `Pay ₹${price} via PhonePe / UPI`;
-    }
-
-    async function checkEta(pincode) {
-      if (pincode.length === 6) {
-        const badge = document.getElementById('etaBadge');
-        const text = document.getElementById('etaText');
-        badge.style.display = 'flex';
-        text.innerText = 'Checking live Shiprocket delivery speed...';
-
-        try {
-          const res = await fetch(`/api/track?pincode=${pincode}`);
-          text.innerText = `⚡ Estimated Delivery: 2-3 Days via Ekart Logistics`;
-        } catch(e) {
-          text.innerText = `⚡ Free Pan-India Delivery (2-3 Business Days)`;
-        }
-      }
-    }
-
-    function handlePayClick() {
-      const name = document.getElementById('custName').value.trim();
-      const phone = document.getElementById('custPhone').value.trim();
-      const address = document.getElementById('custAddress').value.trim();
-      const city = document.getElementById('custCity').value.trim() || 'Bengaluru';
-      const state = document.getElementById('custState').value.trim() || 'Karnataka';
-      const pincode = document.getElementById('custPincode').value.trim();
-
-      if (!name || !phone || !address || pincode.length !== 6) {
-        alert('Please fill in all address details and a 6-digit Pincode!');
-        return;
-      }
-
-      const orderId = 'VD-' + Date.now().toString().slice(-6);
-      const merchantVpa = 'Q204350776@ybl';
-      const note = `Order ${orderId} - ${currentProduct.name}`.slice(0, 30);
-      const upiUri = `upi://pay?pa=${encodeURIComponent(merchantVpa)}&pn=Viyona%20Designs&am=${currentProduct.price}.00&cu=INR&tr=${encodeURIComponent(orderId)}&tn=${encodeURIComponent(note)}`;
-      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(upiUri)}`;
-
-      activeOrder = {
-        orderId,
-        productId: currentProduct.id,
-        customerName: name,
-        customerPhone: phone,
-        address,
-        city,
-        state,
-        pincode,
-        amount: currentProduct.price,
-        upiUri
-      };
-
-      document.getElementById('qrImage').src = qrUrl;
-      document.getElementById('modalAmount').innerText = `₹${currentProduct.price}.00`;
-      document.getElementById('upiAppBtn').href = upiUri;
-      document.getElementById('pollStatusText').innerText = 'Waiting for PhonePe payment...';
-      
-      document.getElementById('paymentStatePrompt').style.display = 'block';
-      document.getElementById('paymentStateSuccess').style.display = 'none';
-
-      document.getElementById('paymentModal').classList.add('active');
-
-      // Start 24/7 Automated Real-Time Background Polling
-      startPaymentAutoCheck(orderId);
-
-      // On Mobile, directly launch UPI app
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      if (isMobile) {
-        window.location.href = upiUri;
-      }
-    }
-
-    function startPaymentAutoCheck(orderId) {
-      if (pollTimer) clearInterval(pollTimer);
-
-      pollTimer = setInterval(async () => {
-        try {
-          const params = new URLSearchParams({
-            order_id: activeOrder.orderId,
-            product_id: activeOrder.productId,
-            name: activeOrder.customerName,
-            phone: activeOrder.customerPhone,
-            address: activeOrder.address,
-            city: activeOrder.city,
-            state: activeOrder.state,
-            pincode: activeOrder.pincode
-          });
-
-          const res = await fetch(`/api/check-payment?${params.toString()}`);
-          const data = await res.json();
-
-          if (data.status === 'PAID') {
-            clearInterval(pollTimer);
-            document.getElementById('paymentStatePrompt').style.display = 'none';
-            document.getElementById('paymentStateSuccess').style.display = 'block';
-            document.getElementById('succOrderId').innerText = data.order_id;
-            document.getElementById('succProduct').innerText = data.product_name;
-            document.getElementById('succAwb').innerText = data.awb_code;
-            document.getElementById('succTrackBtn').href = data.tracking_url;
-          }
-        } catch (e) {
-          console.log('Poll waiting...', e.message);
-        }
-      }, 2000);
-    }
-
-    async function instantConfirm() {
-      document.getElementById('pollStatusText').innerText = 'Booking your courier with Shiprocket...';
-      try {
-        const params = new URLSearchParams({
-          order_id: activeOrder.orderId,
-          product_id: activeOrder.productId,
-          name: activeOrder.customerName,
-          phone: activeOrder.customerPhone,
-          address: activeOrder.address,
-          city: activeOrder.city,
-          state: activeOrder.state,
-          pincode: activeOrder.pincode,
-          confirm: 'true'
-        });
-
-        const res = await fetch(`/api/check-payment?${params.toString()}`);
-        const data = await res.json();
-
-        if (data.status === 'PAID') {
-          if (pollTimer) clearInterval(pollTimer);
-          document.getElementById('paymentStatePrompt').style.display = 'none';
-          document.getElementById('paymentStateSuccess').style.display = 'block';
-          document.getElementById('succOrderId').innerText = data.order_id;
-          document.getElementById('succProduct').innerText = data.product_name;
-          document.getElementById('succAwb').innerText = data.awb_code;
-          document.getElementById('succTrackBtn').href = data.tracking_url;
-        } else {
-          alert('Could not book shipment: ' + (data.error || 'Please try again'));
-        }
-      } catch (err) {
-        alert('Network error: ' + err.message);
-      }
-    }
-
-    function closeModal() {
-      if (pollTimer) clearInterval(pollTimer);
-      document.getElementById('paymentModal').classList.remove('active');
-    }
-  </script>
 </body>
 </html>

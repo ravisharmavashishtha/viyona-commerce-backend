@@ -8,7 +8,7 @@ export const PRODUCTS = {
     sku: 'VD-GANESHA-WHT-01',
     name: 'Matte White Lord Ganesha Idol',
     subtitle: 'Contemporary Minimalist Sacred Sculpture',
-    price: 1,
+    price: 599,
     mrp: 1199,
     dimensions: '7 × 4 × 3.5 inches',
     weight_kg: 0.4,
