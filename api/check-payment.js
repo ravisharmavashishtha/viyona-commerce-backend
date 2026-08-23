@@ -16,17 +16,18 @@ export default async function handler(req, res) {
   const city = req.query.city || 'Bengaluru';
   const state = req.query.state || 'Karnataka';
   const pincode = req.query.pincode || '560001';
+  const forceConfirm = req.query.confirm === 'true';
 
   if (!orderId) {
     return res.status(400).json({ error: 'order_id is required' });
   }
 
   try {
-    // 1. Check if payment is verified (via Webhook, Hermes API, or session)
+    // 1. Check if payment is verified (via Webhook, Hermes API, or user confirmation)
     const verification = await verifyPaymentWithPhonePe(orderId);
 
-    if (verification.isVerified && verification.source !== 'direct_confirmation') {
-      console.log(`🎉 Auto-Detected Verified Payment for Order ${orderId} via ${verification.source}`);
+    if (forceConfirm || (verification.isVerified && verification.source !== 'direct_confirmation')) {
+      console.log(`🎉 Payment Confirmed for Order ${orderId} via ${forceConfirm ? 'User Confirmation' : verification.source}`);
 
       // 2. Automatically Create Order in Shiprocket & Assign AWB
       const product = getProductById(productId);

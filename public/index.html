@@ -497,18 +497,19 @@
           <span style="font-size:22px; font-weight:800; color:var(--gold-light);" id="modalAmount">₹1.00</span>
         </div>
 
-        <a id="upiAppBtn" href="#" class="btn-pay" style="text-decoration:none; margin-bottom:12px;">
-          <span>📱</span> Open PhonePe / GPay App
-        </a>
-
         <!-- Live Auto-Detection Badge -->
-        <div style="background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25); border-radius:12px; padding:12px; margin-top:12px; display:flex; align-items:center; justify-content:center; gap:8px;">
-          <div style="width:8px; height:8px; border-radius:50%; background:#10B981; animation: pulse 1.5s infinite;"></div>
-          <span style="font-size:12px; color:#6EE7B7; font-weight:600;" id="pollStatusText">Waiting for PhonePe payment...</span>
+        <div style="background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25); border-radius:12px; padding:12px; margin-top:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <div style="width:8px; height:8px; border-radius:50%; background:#10B981; animation: pulse 1.5s infinite;"></div>
+            <span style="font-size:12px; color:#6EE7B7; font-weight:600;" id="pollStatusText">Waiting for PhonePe payment...</span>
+          </div>
+          <button onclick="instantConfirm()" class="btn-pay" style="width:100%; padding:10px; font-size:13px; background:#10B981; color:#FFFFFF; margin-top:4px; box-shadow:0 4px 15px rgba(16,185,129,0.3);">
+            <span>✅</span> Payment Done? Book Courier Now
+          </button>
         </div>
 
         <p style="font-size:11px; color:#9CA3AF; margin-top:10px;">
-          🔊 SmartSpeaker sync active. QR will close automatically upon payment!
+          🔊 SmartSpeaker sync active. Parcel booked automatically upon payment!
         </p>
       </div>
 
@@ -664,9 +665,44 @@
       }, 2000);
     }
 
+    async function instantConfirm() {
+      document.getElementById('pollStatusText').innerText = 'Booking your courier with Shiprocket...';
+      try {
+        const params = new URLSearchParams({
+          order_id: activeOrder.orderId,
+          product_id: activeOrder.productId,
+          name: activeOrder.customerName,
+          phone: activeOrder.customerPhone,
+          address: activeOrder.address,
+          city: activeOrder.city,
+          state: activeOrder.state,
+          pincode: activeOrder.pincode,
+          confirm: 'true'
+        });
+
+        const res = await fetch(`/api/check-payment?${params.toString()}`);
+        const data = await res.json();
+
+        if (data.status === 'PAID') {
+          if (pollTimer) clearInterval(pollTimer);
+          document.getElementById('paymentStatePrompt').style.display = 'none';
+          document.getElementById('paymentStateSuccess').style.display = 'block';
+          document.getElementById('succOrderId').innerText = data.order_id;
+          document.getElementById('succProduct').innerText = data.product_name;
+          document.getElementById('succAwb').innerText = data.awb_code;
+          document.getElementById('succTrackBtn').href = data.tracking_url;
+        } else {
+          alert('Could not book shipment: ' + (data.error || 'Please try again'));
+        }
+      } catch (err) {
+        alert('Network error: ' + err.message);
+      }
+    }
+
     function closeModal() {
       if (pollTimer) clearInterval(pollTimer);
       document.getElementById('paymentModal').classList.remove('active');
     }
+  </script>
 </body>
 </html>
