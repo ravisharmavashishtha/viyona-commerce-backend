@@ -37,12 +37,12 @@ export default async function handler(req, res) {
 
       // Extract metadata / customer details from transaction ID or session
       // In production, fetch order details by transaction ID
-      const customerPhone = paymentData.data?.customerPhone || '919162691143';
-      const customerName = paymentData.data?.customerName || 'Valued Patron';
-      const address = paymentData.data?.address || 'India';
-      const city = paymentData.data?.city || 'Pune';
-      const state = paymentData.data?.state || 'Maharashtra';
-      const pincode = paymentData.data?.pincode || '411057';
+      const customerPhone = paymentData.data?.customerPhone || '919876543210';
+      const customerName = paymentData.data?.customerName || 'Aarav Sharma';
+      const address = paymentData.data?.address || 'Flat 402, Palm Heights, MG Road';
+      const city = paymentData.data?.city || 'Bengaluru';
+      const state = paymentData.data?.state || 'Karnataka';
+      const pincode = paymentData.data?.pincode || '560001';
       const product = getProductById('ganesha');
 
       // 1. Automatically Create Shiprocket Order & Assign AWB

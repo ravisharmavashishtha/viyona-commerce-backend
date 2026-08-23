@@ -54,7 +54,7 @@ async function runAllTests() {
 
   // Test 3: Customer Chat & Catalog Trigger
   console.log('\n3. Simulating Customer Chat ("Hi") on WhatsApp (POST /api/whatsapp)...');
-  const customerPhone = '919162691143';
+  const customerPhone = '919876543210';
   const { req: r2, res: s2, getResult: g2 } = mockReqRes('POST', {
     entry: [{ changes: [{ value: { messages: [{ from: customerPhone, text: { body: 'Hi' } }] } }] }]
   });
@@ -70,9 +70,9 @@ async function runAllTests() {
   console.log('✅ Product Selection Result:', g3().data);
 
   // Test 5: Address & Pincode with Dynamic UPI Link & QR
-  console.log('\n5. Simulating Customer Address Submission (Buxar, Bihar 802133)...');
+  console.log('\n5. Simulating Customer Address Submission (Bengaluru, Karnataka 560001)...');
   const { req: r4, res: s4, getResult: g4 } = mockReqRes('POST', {
-    entry: [{ changes: [{ value: { messages: [{ from: customerPhone, text: { body: 'Roushani Kumari, Naya bhojpur, Buxar, Bihar - 802133' } }] } }] }]
+    entry: [{ changes: [{ value: { messages: [{ from: customerPhone, text: { body: 'Aarav Sharma, Flat 402, Palm Heights, MG Road, Bengaluru, Karnataka - 560001' } }] } }] }]
   });
   await handlerWhatsapp(r4, s4);
   console.log('✅ Bill & Dynamic UPI Link Generated:', g4().data);

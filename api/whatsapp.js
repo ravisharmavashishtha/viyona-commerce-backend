@@ -113,7 +113,7 @@ export default async function handler(req, res) {
         if (!pincode) {
           await sendWhatsAppMessage({
             to: from,
-            message: `⚠️ We couldn't detect a 6-digit Pincode in your message. Please include your 6-digit delivery pincode (e.g. 802133 or 411057).`
+            message: `⚠️ We couldn't detect a 6-digit Pincode in your message. Please include your 6-digit delivery pincode (e.g. 560001 or 110001).`
           });
           return res.status(200).json({ status: 'pincode_missing' });
         }
