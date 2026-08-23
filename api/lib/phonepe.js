@@ -5,7 +5,7 @@
 
 import crypto from 'node:crypto';
 
-const MERCHANT_VPA = process.env.PHONEPE_MERCHANT_VPA || 'viyonadesigns@ybl'; // Or your PhonePe Business VPA
+const MERCHANT_VPA = process.env.PHONEPE_MERCHANT_VPA || 'Q204350776@ybl';
 const MERCHANT_NAME = 'Viyona Designs';
 
 /**

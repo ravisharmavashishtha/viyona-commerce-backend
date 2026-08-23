@@ -484,7 +484,7 @@
     <div class="modal-content">
       <button class="modal-close" onclick="closeModal()">×</button>
       <h3 style="font-family:'Cinzel',serif; color:#FFFFFF; margin-bottom:4px;">Scan & Pay via UPI</h3>
-      <p style="font-size:13px; color:var(--text-muted);">Instant 0% Fee Payment to <b>viyonadesigns@ybl</b></p>
+      <p style="font-size:13px; color:var(--text-muted);">Instant 0% Fee Payment to <b>Q204350776@ybl</b></p>
       
       <div class="qr-container">
         <img id="qrImage" src="" alt="PhonePe QR Code">
@@ -546,7 +546,7 @@
       }
 
       const orderId = 'VD-' + Date.now().toString().slice(-6);
-      const merchantVpa = 'viyonadesigns@ybl';
+      const merchantVpa = 'Q204350776@ybl';
       const note = `Order ${orderId} - ${currentProduct.name}`.slice(0, 30);
       const upiUri = `upi://pay?pa=${encodeURIComponent(merchantVpa)}&pn=Viyona%20Designs&am=${currentProduct.price}.00&cu=INR&tr=${encodeURIComponent(orderId)}&tn=${encodeURIComponent(note)}`;
       const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(upiUri)}`;
