@@ -501,17 +501,14 @@
           <span>📱</span> Open PhonePe / GPay App
         </a>
 
-        <!-- UTR / Confirmation Box -->
-        <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:12px; margin-top:12px;">
-          <p style="font-size:12px; color:#D1D5DB; margin-bottom:8px; font-weight:600;">Already paid? Confirm to generate tracking:</p>
-          <input type="text" id="utrInput" class="form-input" placeholder="Optional 12-Digit UPI Ref / UTR" style="margin-bottom:8px; font-size:13px; padding:8px 12px;">
-          <button id="btnConfirmPay" class="btn-pay" onclick="confirmPaymentAndShip()" style="font-size:14px; padding:10px; background:#10B981; color:#FFFFFF; box-shadow:0 4px 15px rgba(16,185,129,0.3);">
-            <span>✅</span> I Have Paid — Generate Tracking
-          </button>
+        <!-- Live Auto-Detection Badge -->
+        <div style="background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25); border-radius:12px; padding:12px; margin-top:12px; display:flex; align-items:center; justify-content:center; gap:8px;">
+          <div style="width:8px; height:8px; border-radius:50%; background:#10B981; animation: pulse 1.5s infinite;"></div>
+          <span style="font-size:12px; color:#6EE7B7; font-weight:600;" id="pollStatusText">Waiting for PhonePe payment...</span>
         </div>
 
         <p style="font-size:11px; color:#9CA3AF; margin-top:10px;">
-          🔊 Verified by Viyona Studio SmartSpeaker. Parcel booked automatically via Shiprocket!
+          🔊 SmartSpeaker sync active. QR will close automatically upon payment!
         </p>
       </div>
 
@@ -540,6 +537,14 @@
     </div>
   </div>
 
+  <style>
+    @keyframes pulse {
+      0% { transform: scale(0.95); opacity: 0.7; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.7; }
+    }
+  </style>
+
   <script>
     let currentProduct = {
       id: 'ganesha',
@@ -548,6 +553,7 @@
     };
 
     let activeOrder = {};
+    let pollTimer = null;
 
     function selectProduct(id, price, name, element) {
       currentProduct = { id, price, name };
@@ -607,11 +613,15 @@
       document.getElementById('qrImage').src = qrUrl;
       document.getElementById('modalAmount').innerText = `₹${currentProduct.price}.00`;
       document.getElementById('upiAppBtn').href = upiUri;
+      document.getElementById('pollStatusText').innerText = 'Waiting for PhonePe payment...';
       
       document.getElementById('paymentStatePrompt').style.display = 'block';
       document.getElementById('paymentStateSuccess').style.display = 'none';
 
       document.getElementById('paymentModal').classList.add('active');
+
+      // Start 24/7 Automated Real-Time Background Polling
+      startPaymentAutoCheck(orderId);
 
       // On Mobile, directly launch UPI app
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -620,44 +630,43 @@
       }
     }
 
-    async function confirmPaymentAndShip() {
-      const btn = document.getElementById('btnConfirmPay');
-      const utr = document.getElementById('utrInput').value.trim();
-      btn.disabled = true;
-      btn.innerText = '⏳ Verifying & Booking Parcel with Shiprocket...';
+    function startPaymentAutoCheck(orderId) {
+      if (pollTimer) clearInterval(pollTimer);
 
-      try {
-        const res = await fetch('/api/confirm-order', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            ...activeOrder,
-            utr
-          })
-        });
+      pollTimer = setInterval(async () => {
+        try {
+          const params = new URLSearchParams({
+            order_id: activeOrder.orderId,
+            product_id: activeOrder.productId,
+            name: activeOrder.customerName,
+            phone: activeOrder.customerPhone,
+            address: activeOrder.address,
+            city: activeOrder.city,
+            state: activeOrder.state,
+            pincode: activeOrder.pincode
+          });
 
-        const data = await res.json();
-        if (data.success) {
-          document.getElementById('paymentStatePrompt').style.display = 'none';
-          document.getElementById('paymentStateSuccess').style.display = 'block';
-          document.getElementById('succOrderId').innerText = data.order_id;
-          document.getElementById('succProduct').innerText = data.product_name;
-          document.getElementById('succAwb').innerText = data.awb_code;
-          document.getElementById('succTrackBtn').href = data.tracking_url;
-        } else {
-          alert('Could not book shipment: ' + (data.error || 'Please try again'));
+          const res = await fetch(`/api/check-payment?${params.toString()}`);
+          const data = await res.json();
+
+          if (data.status === 'PAID') {
+            clearInterval(pollTimer);
+            document.getElementById('paymentStatePrompt').style.display = 'none';
+            document.getElementById('paymentStateSuccess').style.display = 'block';
+            document.getElementById('succOrderId').innerText = data.order_id;
+            document.getElementById('succProduct').innerText = data.product_name;
+            document.getElementById('succAwb').innerText = data.awb_code;
+            document.getElementById('succTrackBtn').href = data.tracking_url;
+          }
+        } catch (e) {
+          console.log('Poll waiting...', e.message);
         }
-      } catch (err) {
-        alert('Network error: ' + err.message);
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = '<span>✅</span> I Have Paid — Generate Tracking';
-      }
+      }, 2000);
     }
 
     function closeModal() {
+      if (pollTimer) clearInterval(pollTimer);
       document.getElementById('paymentModal').classList.remove('active');
     }
-  </script>
 </body>
 </html>
