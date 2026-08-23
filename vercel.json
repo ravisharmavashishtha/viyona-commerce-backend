@@ -1,6 +1,8 @@
 {
   "version": 2,
   "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/order", "destination": "/index.html" },
     { "source": "/whatsapp", "destination": "/api/whatsapp" },
     { "source": "/phonepe", "destination": "/api/phonepe" },
     { "source": "/track", "destination": "/api/track" },
