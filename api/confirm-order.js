@@ -5,6 +5,7 @@
 
 import { createShiprocketOrder } from './lib/shiprocket.js';
 import { getProductById } from './lib/catalog.js';
+import { verifyPaymentWithPhonePe } from './lib/phonepe.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -32,9 +33,20 @@ export default async function handler(req, res) {
     const product = getProductById(productId || 'ganesha');
     const finalAmount = amount || product.price || 1;
 
-    console.log(`📦 Confirming Payment for Order ${orderId} (UTR: ${utr || 'Direct'}) - Amount: ₹${finalAmount}`);
+    console.log(`📦 Verifying Payment with PhonePe for Order ${orderId} (UTR: ${utr || 'Direct'}) - Amount: ₹${finalAmount}`);
 
-    // 1. Automatically Create Order in Shiprocket & Assign AWB
+    // 1. Server-Side PhonePe Payment Verification Check
+    const verification = await verifyPaymentWithPhonePe(orderId, utr);
+    if (!verification.isVerified) {
+      return res.status(400).json({
+        success: false,
+        error: 'Payment not verified yet by PhonePe. Please complete your UPI payment first.'
+      });
+    }
+
+    console.log(`✅ Payment Verified via ${verification.source}! Proceeding to Shiprocket dispatch...`);
+
+    // 2. Automatically Create Order in Shiprocket & Assign AWB
     const shipment = await createShiprocketOrder({
       orderId,
       customerName: customerName || 'Valued Patron',

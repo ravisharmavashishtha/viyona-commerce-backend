@@ -3,7 +3,7 @@
  * 24/7 PhonePe Payment Webhook & Automated Shiprocket Fulfillment
  */
 
-import { verifyPhonePeChecksum } from './lib/phonepe.js';
+import { verifyPhonePeChecksum, VERIFIED_PAYMENTS } from './lib/phonepe.js';
 import { createShiprocketOrder } from './lib/shiprocket.js';
 import { sendWhatsAppMessage } from './lib/whatsapp.js';
 import { getProductById } from './lib/catalog.js';
@@ -34,6 +34,7 @@ export default async function handler(req, res) {
 
     if (code === 'PAYMENT_SUCCESS' || code === 'SUCCESS') {
       console.log(`🎉 PAYMENT SUCCESSFUL for Order: ${merchantTransactionId} (₹${amount})`);
+      VERIFIED_PAYMENTS.set(merchantTransactionId, paymentData);
 
       // Extract metadata / customer details from transaction ID or session
       // In production, fetch order details by transaction ID
