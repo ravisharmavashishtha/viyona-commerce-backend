@@ -3,6 +3,9 @@
   "rewrites": [
     { "source": "/", "destination": "/index.html" },
     { "source": "/order", "destination": "/index.html" },
+    { "source": "/razorpay", "destination": "/razorpay.html" },
+    { "source": "/create-order", "destination": "/api/create-order" },
+    { "source": "/verify-payment", "destination": "/api/verify-payment" },
     { "source": "/whatsapp", "destination": "/api/whatsapp" },
     { "source": "/phonepe", "destination": "/api/phonepe" },
     { "source": "/track", "destination": "/api/track" },

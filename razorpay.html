@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Viyona Designs — Razorpay Standard Checkout</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Razorpay Standard Checkout SDK -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <style>
+    :root {
+      --bg-dark: #0A0D14;
+      --card-bg: rgba(22, 27, 38, 0.88);
+      --card-border: rgba(212, 175, 55, 0.3);
+      --gold-primary: #D4AF37;
+      --gold-light: #F3E5AB;
+      --text-main: #F9FAFB;
+      --text-muted: #9CA3AF;
+      --accent-green: #10B981;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-dark);
+      background-image: radial-gradient(circle at 50% 20%, rgba(212, 175, 55, 0.12) 0%, transparent 60%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+    .checkout-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 32px 24px;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(12px);
+      text-align: center;
+    }
+    .brand-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid var(--card-border);
+      color: var(--gold-light);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      background: linear-gradient(135deg, #FFFFFF 0%, #D4AF37 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .subtext {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+    .product-select {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      text-align: left;
+      margin-bottom: 20px;
+    }
+    .product-option {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .product-option.selected {
+      border-color: var(--gold-primary);
+      background: rgba(212, 175, 55, 0.1);
+    }
+    .product-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #FFFFFF;
+    }
+    .product-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .product-price {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--gold-light);
+    }
+    .btn-razorpay {
+      width: 100%;
+      background: linear-gradient(135deg, #0C2340 0%, #1A365D 100%);
+      color: #FFFFFF;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+      transition: all 0.2s ease;
+    }
+    .btn-razorpay:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 25px rgba(212, 175, 55, 0.2);
+    }
+    .btn-razorpay:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .status-box {
+      margin-top: 18px;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      text-align: left;
+      display: none;
+    }
+    .status-success {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #6EE7B7;
+    }
+    .status-error {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #FCA5A5;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="checkout-card">
+    <div class="brand-badge">⚡ Razorpay Standard Checkout ⚡</div>
+    <h1>Viyona Designs Studio</h1>
+    <p class="subtext">Cards • UPI • NetBanking • Wallets (100% Secure via Razorpay)</p>
+
+    <!-- Product Options -->
+    <div class="product-select">
+      <!-- Option 1: ₹1 Test Item -->
+      <div class="product-option selected" onclick="selectItem(1, 'Lord Ganesha Idol (Live Test)', this)">
+        <div>
+          <div class="product-name">🕉️ Lord Ganesha Idol (Live Test)</div>
+          <div class="product-desc">100 Paise Minimum Order Sandbox Test</div>
+        </div>
+        <div class="product-price">₹1.00</div>
+      </div>
+
+      <!-- Option 2: Full Product -->
+      <div class="product-option" onclick="selectItem(550, 'Lord Ganesha Idol (Full Edition)', this)">
+        <div>
+          <div class="product-name">🕉️ Lord Ganesha Idol</div>
+          <div class="product-desc">100% Plant-Based Bio-PLA • 0.08mm Layer Precision</div>
+        </div>
+        <div class="product-price">₹550.00</div>
+      </div>
+
+      <!-- Option 3: Sleeping Puppy -->
+      <div class="product-option" onclick="selectItem(499, 'Sleeping Puppy Organizer Tray', this)">
+        <div>
+          <div class="product-name">🐶 Sleeping Puppy Valet Tray</div>
+          <div class="product-desc">Artisan Desk Key Catchall Tray</div>
+        </div>
+        <div class="product-price">₹499.00</div>
+      </div>
+    </div>
+
+    <!-- Pay Button -->
+    <button id="payBtn" class="btn-razorpay" onclick="handlePay()">
+      <span>💳</span>
+      <span id="btnLabel">Pay ₹1.00 via Razorpay</span>
+    </button>
+
+    <!-- Result Banner -->
+    <div id="statusBox" class="status-box"></div>
+  </div>
+
+  <script>
+    let selectedAmount = 1;
+    let selectedName = 'Lord Ganesha Idol (Live Test)';
+
+    function selectItem(amount, name, el) {
+      selectedAmount = amount;
+      selectedName = name;
+      document.querySelectorAll('.product-option').forEach(opt => opt.classList.remove('selected'));
+      el.classList.add('selected');
+      document.getElementById('btnLabel').innerText = `Pay ₹${amount}.00 via Razorpay`;
+      hideStatus();
+    }
+
+    function showStatus(isSuccess, message, details = '') {
+      const box = document.getElementById('statusBox');
+      box.style.display = 'block';
+      box.className = `status-box ${isSuccess ? 'status-success' : 'status-error'}`;
+      box.innerHTML = `
+        <div style="font-weight: 700; margin-bottom: 4px;">${isSuccess ? '✅ Payment Verified!' : '⚠️ Payment Failed'}</div>
+        <div>${message}</div>
+        ${details ? `<div style="font-size: 11px; margin-top: 6px; opacity: 0.85;">${details}</div>` : ''}
+      `;
+    }
+
+    function hideStatus() {
+      document.getElementById('statusBox').style.display = 'none';
+    }
+
+    async function handlePay() {
+      const btn = document.getElementById('payBtn');
+      const btnLabel = document.getElementById('btnLabel');
+      btn.disabled = true;
+      btnLabel.innerText = 'Creating Secure Razorpay Order...';
+      hideStatus();
+
+      try {
+        const amountInPaise = Math.round(selectedAmount * 100);
+
+        // Step 1: Call Backend to Create Order
+        const res = await fetch('/api/create-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            amount: amountInPaise,
+            currency: 'INR',
+            receipt: 'rcpt_' + Date.now().toString().slice(-8),
+            notes: { product_name: selectedName }
+          })
+        });
+
+        const orderData = await res.json();
+        if (!res.ok || !orderData.order_id) {
+          throw new Error(orderData.error || 'Failed to create order on server');
+        }
+
+        btnLabel.innerText = 'Waiting for Payment...';
+
+        // Step 2: Open Razorpay Standard Checkout Modal
+        const options = {
+          key: orderData.key_id || 'rzp_test_TTWjZhUsLcGF4P',
+          amount: orderData.amount,
+          currency: orderData.currency || 'INR',
+          name: 'Viyona Designs',
+          description: selectedName,
+          image: 'https://viyonadesigns.com/logo.png',
+          order_id: orderData.order_id,
+          theme: { color: '#D4AF37' },
+          modal: {
+            ondismiss: function() {
+              btn.disabled = false;
+              btnLabel.innerText = `Pay ₹${selectedAmount}.00 via Razorpay`;
+              showStatus(false, 'Checkout modal was dismissed by user.');
+            }
+          },
+          handler: async function(response) {
+            btnLabel.innerText = 'Verifying Payment Signature...';
+
+            // Step 3: Call Backend to Verify Signature
+            try {
+              const verifyRes = await fetch('/api/verify-payment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature
+                })
+              });
+
+              const verifyData = await verifyRes.json();
+              if (verifyRes.ok && verifyData.success) {
+                showStatus(
+                  true,
+                  `Order #${response.razorpay_order_id} verified successfully!`,
+                  `Payment ID: <b>${response.razorpay_payment_id}</b>`
+                );
+              } else {
+                showStatus(false, verifyData.error || 'Signature verification failed on server.');
+              }
+            } catch (err) {
+              showStatus(false, 'Network error while verifying signature: ' + err.message);
+            } finally {
+              btn.disabled = false;
+              btnLabel.innerText = `Pay ₹${selectedAmount}.00 via Razorpay`;
+            }
+          }
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.on('payment.failed', function(response) {
+          btn.disabled = false;
+          btnLabel.innerText = `Pay ₹${selectedAmount}.00 via Razorpay`;
+          showStatus(false, response.error.description || 'Payment Failed', `Reason: ${response.error.reason}`);
+        });
+
+        rzp.open();
+
+      } catch (err) {
+        btn.disabled = false;
+        btnLabel.innerText = `Pay ₹${selectedAmount}.00 via Razorpay`;
+        showStatus(false, err.message);
+      }
+    }
+  </script>
+</body>
+</html>

@@ -17,7 +17,7 @@ export const VERIFIED_PAYMENTS = new Map();
  */
 export function generateUpiPaymentLink({ orderId, amount, productName }) {
   const cleanNote = `Order ${orderId} - ${productName}`.slice(0, 30);
-  const upiUri = `upi://pay?pa=${encodeURIComponent(MERCHANT_VPA)}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${amount.toFixed(2)}&cu=INR&tr=${encodeURIComponent(orderId)}&tn=${encodeURIComponent(note)}`;
+  const upiUri = `upi://pay?pa=${encodeURIComponent(MERCHANT_VPA)}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${amount.toFixed(2)}&cu=INR&tr=${encodeURIComponent(orderId)}&tn=${encodeURIComponent(cleanNote)}`;
   
   // Standard dynamic QR URL
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(upiUri)}`;
